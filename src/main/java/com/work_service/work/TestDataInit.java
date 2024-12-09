@@ -27,7 +27,7 @@ public class TestDataInit {
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         /*Member init*/
-        Member userA = Member.builder().username("userA").age(10).createdAt(LocalDateTime.now()).build();
+        /*Member userA = Member.builder().username("userA").age(10).createdAt(LocalDateTime.now()).build();
         memberRepository.save(userA);
         Member userB = Member.builder().username("userB").age(19).createdAt(LocalDateTime.now()).build();
         memberRepository.save(userB);
@@ -36,14 +36,14 @@ public class TestDataInit {
         Member userD = Member.builder().username("userD").age(16).createdAt(LocalDateTime.now()).build();
         memberRepository.save(userD);
         Member userE = Member.builder().username("userE").age(23).createdAt(LocalDateTime.now()).build();
-        memberRepository.save(userE);
+        memberRepository.save(userE);*/
 
         /*book init*/
         Book book1 = Book.builder().title("BOOK1").createdAt(LocalDateTime.now()).gradeType(GradeType.ALL.name()).build();
         bookRepository.save(book1);
         Book book2 = Book.builder().title("BOOK2").createdAt(LocalDateTime.now()).gradeType(GradeType.ALL.name()).build();
         bookRepository.save(book2);
-        Book book4 = Book.builder().title("BOOK3").createdAt(LocalDateTime.now()).gradeType(GradeType.ALL.name()).build();
+        Book book4 = Book.builder().title("BOOK3").createdAt(LocalDateTime.now()).gradeType(GradeType.NotAllowed.name()).build();
         bookRepository.save(book4);
         Book book5 = Book.builder().title("BOOK4").createdAt(LocalDateTime.now()).gradeType(GradeType.ALL.name()).build();
         bookRepository.save(book5);
