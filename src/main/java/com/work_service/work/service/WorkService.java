@@ -40,11 +40,14 @@ public class WorkService {
 
     private static final int LIMIT_AGE = 19;
 
+    @Transactional(readOnly = true)
     @Cacheable(value = "books", key = "#bookId")
     public List<ViewHistory> findViewHistory(Long bookId) {
         return viewRepository.findAllByBookId(bookId);
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "books", key = "#findTop10PopularBooks")
     public List<BookResponse> findTop10PopularBooks() {
         return viewRepository.findByTop10BooksByViews()
                 .stream()
@@ -64,6 +67,8 @@ public class WorkService {
         return purchaseRepository.save(PurchaseHistory.builder().member(member).book(book).purchasedAt(LocalDateTime.now()).build()).getId();
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "books", key = "#findTop10PurchasedPopularBooks")
     public List<PurchasedBookResponse> findTop10PurchasedPopularBooks() {
         return purchaseRepository.findTop10BooksByPurchases()
                 .stream()
@@ -97,6 +102,7 @@ public class WorkService {
         return jwtTokenProvider.createToken(userId);
     }
 
+    @Transactional
     public Long saveViewHistory(Long bookId, String userId) throws CustomException {
         Book findBook = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
         Member findMember = memberRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
@@ -110,6 +116,7 @@ public class WorkService {
         return viewRepository.save(ViewHistory.builder().member(findMember).book(findBook).createdAt(LocalDateTime.now()).viewedAt(LocalDateTime.now()).build()).getId();
     }
 
+    @Transactional(readOnly = true)
     public String login(String userId, String password) throws CustomException {
         Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
         if(!passwordEncoder.matches(password,member.getPassword())) {

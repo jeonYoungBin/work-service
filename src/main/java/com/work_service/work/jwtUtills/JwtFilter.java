@@ -2,7 +2,7 @@ package com.work_service.work.jwtUtills;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.work_service.work.domain.response.CommonResponseDto;
+import com.work_service.work.domain.response.CommonResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -37,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         boolean validateToken = true;
-        CommonResponseDto responseEntity = new CommonResponseDto(501, null, null);
+        CommonResponse responseEntity = new CommonResponse(501, null, null);
         if(request.getRequestURI().contains("/api/v1/book/sign") || request.getRequestURI().contains("/api/v1/book/*/views")
         || request.getRequestURI().contains("/api/v1/book/popular") || request.getRequestURI().contains("/api/v1/book/*") || request.getRequestURI().contains("/api/v1/book/login")) {
             filterChain.doFilter(request, response);
@@ -49,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //토큰 유무 체크
         if(authorization == null || !authorization.startsWith("Bearer ")) {
             log.error("토큰이 없거나 잘못된 값입니다.");
-            responseEntity = new CommonResponseDto(501, "토큰이 없거나 잘못된 값입니다.", null);
+            responseEntity = new CommonResponse(501, "토큰이 없거나 잘못된 값입니다.", null);
             response.setHeader("Content-Type", "application/json;charset=UTF-8");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getOutputStream().write(responseBytes(responseEntity));
@@ -70,23 +69,23 @@ public class JwtFilter extends OncePerRequestFilter {
         } catch (UnsupportedJwtException e) {
             validateToken = false;
             log.error("[UnsupportedJwtException] "+e.getMessage());
-            responseEntity = new CommonResponseDto(501, e.getMessage(), null);
+            responseEntity = new CommonResponse(501, e.getMessage(), null);
         } catch (ExpiredJwtException e) {
             validateToken = false;
             log.error("[ExpiredJwtException] "+e.getMessage());
-            responseEntity = new CommonResponseDto(501, e.getMessage(), null);
+            responseEntity = new CommonResponse(501, e.getMessage(), null);
         } catch (MalformedJwtException e) {
             validateToken = false;
             log.error("[MalformedJwtException] "+e.getMessage());
-            responseEntity = new CommonResponseDto(501, e.getMessage(), null);
+            responseEntity = new CommonResponse(501, e.getMessage(), null);
         } catch (JwtException e) {
             validateToken = false;
             log.error("[JwtException] "+e.getMessage());
-            responseEntity = new CommonResponseDto(501, e.getMessage(), null);
+            responseEntity = new CommonResponse(501, e.getMessage(), null);
         } catch (Exception e) {
             validateToken = false;
             log.error("[Exception] "+e.getMessage());
-            responseEntity = new CommonResponseDto(501, e.getMessage(), null);
+            responseEntity = new CommonResponse(501, e.getMessage(), null);
         } finally {
             if(!validateToken) {
                 response.setHeader("Content-Type", "application/json;charset=UTF-8");
