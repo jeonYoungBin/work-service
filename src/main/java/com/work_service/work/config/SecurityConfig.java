@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtTokenUtil jwtTokenUtil;
 
-    private static final String[] PERMIT_URL_ARRAY = {"/api/v1/work/sign","/api/v1/work/*/views","/api/v1/work/popular", "/api/v1/work/*"};
+    private static final String[] PERMIT_URL_ARRAY = {"/api/v1/book/login" ,"/api/v1/book/sign","/api/v1/book/*/views","/api/v1/book/popular", "/api/v1/book/*"};
+    private static final String[] UNPERMIT_URL_ARRAY ={"/api/v1/book/*/purchase", "/api/v1/book/*/views"};
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
@@ -34,7 +35,7 @@ public class SecurityConfig {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
-                .antMatchers("/api/v1/work/*/purchase").authenticated()
+                .antMatchers(UNPERMIT_URL_ARRAY).authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

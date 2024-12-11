@@ -18,7 +18,7 @@ public class WorkApplication {
 
 	@Bean
 	@Profile("local")
-	public TestDataInit testDataInit(MemberJpaDataRepository memberJpaDataRepository, BookJpaDataRepository bookJpaDataRepository) {
-		return new TestDataInit(memberJpaDataRepository, bookJpaDataRepository);
+	public TestDataInit testDataInit(BookJpaDataRepository bookJpaDataRepository) {
+		return new TestDataInit(bookJpaDataRepository);
 	}
 }

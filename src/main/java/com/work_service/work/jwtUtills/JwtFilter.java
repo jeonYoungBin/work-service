@@ -38,8 +38,8 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         boolean validateToken = true;
         CommonResponseDto responseEntity = new CommonResponseDto(501, null, null);
-        if(request.getRequestURI().contains("/api/v1/work/sign") || request.getRequestURI().contains("/api/v1/work/*/views")
-        || request.getRequestURI().contains("/api/v1/work/popular") || request.getRequestURI().contains("/api/v1/work/*")) {
+        if(request.getRequestURI().contains("/api/v1/book/sign") || request.getRequestURI().contains("/api/v1/book/*/views")
+        || request.getRequestURI().contains("/api/v1/book/popular") || request.getRequestURI().contains("/api/v1/book/*") || request.getRequestURI().contains("/api/v1/book/login")) {
             filterChain.doFilter(request, response);
             return;
         }

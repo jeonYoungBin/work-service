@@ -1,5 +1,5 @@
 package com.work_service.work.domain;
 
 public enum GradeType {
-    ALL, NotAllowed
+    ALL, YouthNotAllowed
 }

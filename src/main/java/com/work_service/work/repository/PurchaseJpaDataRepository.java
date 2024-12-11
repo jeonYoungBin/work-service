@@ -3,6 +3,7 @@ package com.work_service.work.repository;
 import com.work_service.work.domain.response.projection.PurchaseResponseProjection;
 import com.work_service.work.entity.PurchaseHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public interface PurchaseJpaDataRepository extends JpaRepository<PurchaseHistory
             "LIMIT 10", nativeQuery = true)
     List<PurchaseResponseProjection> findTop10BooksByPurchases();
 
+    @Modifying
     @Query("DELETE FROM PurchaseHistory v where v.book.id = :bookId")
     void deleteAllByBookId(Long bookId);
 }

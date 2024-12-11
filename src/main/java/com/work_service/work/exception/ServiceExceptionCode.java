@@ -11,6 +11,8 @@ public enum ServiceExceptionCode implements ErrorCode {
     DATA_NOT_FOUND(HttpStatus.NO_CONTENT, "not found user/book"),
     NOT_ALLOW_BOOK(HttpStatus.FORBIDDEN, "not allow book"),
     ALREADY_JOIN(HttpStatus.CONFLICT, "already join userId"),
+    NOT_PASSWORD_MATCH(HttpStatus.NOT_FOUND, "not match password"),
+    ALREADY_VIEW(HttpStatus.NOT_FOUND, "already view"),
     ;
 
     private final HttpStatus status;

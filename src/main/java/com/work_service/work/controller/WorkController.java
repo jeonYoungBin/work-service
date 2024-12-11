@@ -1,6 +1,5 @@
 package com.work_service.work.controller;
 
-import com.work_service.work.domain.request.MemberSaveRequestDto;
 import com.work_service.work.domain.response.BookResponse;
 import com.work_service.work.domain.response.PurchasedBookResponse;
 import com.work_service.work.entity.ViewHistory;
@@ -13,12 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/work")
+@RequestMapping("/api/v1/book")
 @Slf4j
 @RequiredArgsConstructor
 public class WorkController {
@@ -28,8 +28,16 @@ public class WorkController {
      * 회원 가입
      */
     @PostMapping("/sign")
-    public ResponseEntity<MemberSaveResponse> saveMember(@RequestBody MemberSaveRequestDto request) throws CustomException {
-        return ResponseEntity.ok(MemberSaveResponse.builder().token(workService.saveMember(request)).build());
+    public ResponseEntity<MemberTokenResponse> saveMember(@RequestBody MemberSaveRequestDto request) throws CustomException {
+        return ResponseEntity.ok(MemberTokenResponse.builder().token(workService.saveMember(request.getUserId(), request.getPassword(), request.getUserName(), request.getAge())).build());
+    }
+
+    /**
+     * 로그인
+     */
+    @PostMapping("/login")
+    public ResponseEntity<MemberTokenResponse> loginMember(@RequestBody MemberLoginRequestDto request) throws CustomException {
+        return ResponseEntity.ok(MemberTokenResponse.builder().token(workService.login(request.getUserId(), request.getPassword())).build());
     }
 
     /**
@@ -64,10 +72,10 @@ public class WorkController {
      * 작품구매 API
      */
     @PostMapping("/{bookId}/purchase")
-    public ResponseEntity<PurchaseHistorySaveResponse> purchaseHistorySave(@PathVariable Long bookId, @RequestParam Long userId) throws CustomException, CustomException {
+    public ResponseEntity<PurchaseHistorySaveResponse> purchaseHistorySave(@PathVariable Long bookId, Authentication authentication) throws CustomException, CustomException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(PurchaseHistorySaveResponse.builder()
-                        .purchaseHistoryId(workService.savePurchaseHistory(bookId, userId))
+                        .purchaseHistoryId(workService.savePurchaseHistory(bookId, authentication.getName()))
                         .build());
     }
 
@@ -84,7 +92,7 @@ public class WorkController {
      */
     @DeleteMapping("/{bookId}")
     public ResponseEntity<BookHistoryDeleteResponse> deleteBookHistory(@PathVariable Long bookId) {
-        workService.deleteWorkWithHistory(bookId);
+        workService.deleteBookWithHistory(bookId);
         return ResponseEntity.ok(BookHistoryDeleteResponse.builder().bookId(bookId).build());
     }
 
@@ -96,7 +104,7 @@ public class WorkController {
 
     @Getter
     @Builder
-    static class MemberSaveResponse{
+    static class MemberTokenResponse {
         private String token;
     }
 
@@ -124,5 +132,25 @@ public class WorkController {
             this.age = viewHistory.getMember().getAge();
             this.viewedAt = viewHistory.getViewedAt();
         }
+    }
+
+    @Getter
+    static public class MemberSaveRequestDto {
+        @NotNull(message = "아이디를 넣어주세요")
+        private String userId;
+        @NotNull(message = "패스워드를 넣어주세요")
+        private String password;
+        @NotNull(message = "이름을 넣어주세요")
+        private String userName;
+        @NotNull(message = "나이를 넣어주세요")
+        private Integer age;
+    }
+
+    @Getter
+    static public class MemberLoginRequestDto {
+        @NotNull(message = "아이디를 넣어주세요")
+        private String userId;
+        @NotNull(message = "패스워드를 넣어주세요")
+        private String password;
     }
 }
