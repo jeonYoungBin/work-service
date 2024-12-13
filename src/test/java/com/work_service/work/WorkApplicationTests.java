@@ -93,7 +93,7 @@ class WorkApplicationTests {
 		Long bookId = workService.saveBook("test", false, false, "ALL");
 
 		//when
-		boolean bookEvent = workService.updateBookEvent(true, bookId);
+		Boolean bookEvent = workService.updateBookEvent(true, bookId);
 
 		//then
 		assertThat(bookEvent).isTrue();

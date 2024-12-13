@@ -27,16 +27,16 @@ public class Book {
 
     private String title;
     @Column(name = "is_free")
-    private boolean isFree; // 무료 여부
+    private Boolean isFree; // 무료 여부
     @Column(name = "is_event_active")
-    private boolean isEventActive; // 이벤트 활성화 여부
+    private Boolean isEventActive; // 이벤트 활성화 여부
     @Column(name = "grade_type")
     private String gradeType;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public void updateEventActive(boolean isEventActive) {
+    public void updateEventActive(Boolean isEventActive) {
         this.isEventActive = isEventActive;
     }
 }

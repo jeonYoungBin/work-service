@@ -126,14 +126,14 @@ public class WorkService {
     }
 
     @Transactional
-    public Long saveBook(String title, boolean free, boolean eventActive, String gradeType) {
+    public Long saveBook(String title, Boolean free, Boolean eventActive, String gradeType) {
         return bookRepository.save(Book.builder().title(title).isFree(free).isEventActive(eventActive).gradeType(gradeType).build()).getId();
     }
 
     @Transactional
-    public boolean updateBookEvent(boolean eventActive, Long bookId) throws CustomException {
+    public Boolean updateBookEvent(Boolean eventActive, Long bookId) throws CustomException {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
         book.updateEventActive(eventActive);
-        return bookRepository.save(book).isEventActive();
+        return bookRepository.save(book).getIsEventActive();
     }
 }

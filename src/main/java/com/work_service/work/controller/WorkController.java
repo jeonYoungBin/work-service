@@ -53,7 +53,7 @@ public class WorkController {
     @PostMapping
     public ResponseEntity<BookSaveResponse> saveBook(@RequestBody @Valid BookSaveRequest request) {
         return ResponseEntity.ok(BookSaveResponse.builder()
-                .bookId(workService.saveBook(request.getTitle(), request.isFree(), request.isEventActive(), request.getGradeType()))
+                .bookId(workService.saveBook(request.getTitle(), request.getIsFree(), request.getIsEventActive(), request.getGradeType()))
                 .build());
     }
 
@@ -63,7 +63,7 @@ public class WorkController {
     @PatchMapping
     public ResponseEntity<BookUpdateResponse> updateBookEvent(@RequestBody @Valid BookUpdateRequest request) throws CustomException {
         return ResponseEntity.ok(BookUpdateResponse.builder()
-                .bookId(request.getBookId()).isEventActive(workService.updateBookEvent(true, request.getBookId()))
+                .bookId(request.getBookId()).isEventActive(workService.updateBookEvent(request.getIsEventActive(), request.getBookId()))
                 .build());
     }
 
@@ -212,8 +212,8 @@ public class WorkController {
     static public class BookSaveRequest {
         @NotNull(message = "책 제목을 입력하세요")
         private String title;
-        private boolean isFree = true; // 무료 여부
-        private boolean isEventActive = false; // 이벤트 활성화 여부
+        private Boolean isFree = true; // 무료 여부
+        private Boolean isEventActive = false; // 이벤트 활성화 여부
         @NotNull(message = "등급 타입을 입력하세요")
         @Pattern(regexp = "ALL|YouthNotAllowed", message = "등급 타입은 ALL 또는 YouthNotAllowed 이여야 합니다.")
         private String gradeType;
