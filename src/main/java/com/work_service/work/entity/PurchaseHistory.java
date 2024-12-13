@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "purchase_history")
 public class PurchaseHistory {
@@ -31,6 +34,7 @@ public class PurchaseHistory {
     @Column(name = "purchased_at")
     private LocalDateTime purchasedAt;
 
+    @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

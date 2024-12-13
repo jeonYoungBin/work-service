@@ -16,6 +16,7 @@ import com.work_service.work.repository.MemberJpaDataRepository;
 import com.work_service.work.repository.ViewJpaDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,9 @@ public class WorkService {
     private static final int LIMIT_AGE = 19;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "books", key = "#bookId")
-    public List<ViewHistory> findViewHistory(Long bookId) {
-        return viewRepository.findAllByBookId(bookId);
+    @Cacheable(value = "books", key = "#bookId+':'+#page+':'+#size")
+    public List<ViewHistory> findViewHistory(Long bookId, int page, int size) {
+        return viewRepository.findAllByBookId(bookId, PageRequest.of(page, size));
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +65,7 @@ public class WorkService {
         if(book.getGradeType().equals(GradeType.YouthNotAllowed.name()) && member.getAge() < LIMIT_AGE)
             throw new CustomException(ServiceExceptionCode.NOT_ALLOW_BOOK);
 
-        return purchaseRepository.save(PurchaseHistory.builder().member(member).book(book).purchasedAt(LocalDateTime.now()).build()).getId();
+        return purchaseRepository.save(PurchaseHistory.builder().member(member).book(book).build()).getId();
     }
 
     @Transactional(readOnly = true)
@@ -92,7 +93,6 @@ public class WorkService {
                             .username(userName)
                             .password(passwordEncoder.encode(password))
                             .userId(userId)
-                            .createdAt(LocalDateTime.now())
                             .age(age)
                             .build()
             );
@@ -113,7 +113,7 @@ public class WorkService {
         if(findBook.getGradeType().equals(GradeType.YouthNotAllowed.name()) && findMember.getAge() < LIMIT_AGE) {
             throw new CustomException(ServiceExceptionCode.NOT_ALLOW_BOOK);
         }
-        return viewRepository.save(ViewHistory.builder().member(findMember).book(findBook).createdAt(LocalDateTime.now()).viewedAt(LocalDateTime.now()).build()).getId();
+        return viewRepository.save(ViewHistory.builder().member(findMember).book(findBook).build()).getId();
     }
 
     @Transactional(readOnly = true)
@@ -123,5 +123,17 @@ public class WorkService {
             throw new CustomException(ServiceExceptionCode.NOT_PASSWORD_MATCH);
         }
         return jwtTokenProvider.createToken(userId);
+    }
+
+    @Transactional
+    public Long saveBook(String title, boolean free, boolean eventActive, String gradeType) {
+        return bookRepository.save(Book.builder().title(title).isFree(free).isEventActive(eventActive).gradeType(gradeType).build()).getId();
+    }
+
+    @Transactional
+    public boolean updateBookEvent(boolean eventActive, Long bookId) throws CustomException {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        book.updateEventActive(eventActive);
+        return bookRepository.save(book).isEventActive();
     }
 }
