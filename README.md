@@ -32,7 +32,6 @@
    
    4) GET /api/v1/book/{bookId}/views(작품 조회 이력)
      - pathvariable : bookId
-     
      - response
      [
        {
@@ -89,6 +88,18 @@
         {   
             "bookId": 2
         }
+   10) PATCH /api/v1/book/enable/isFree (무료 ON/OFF)
+    - request/response
+      {
+         "bookId":1,
+         "isFree": true
+      }
+   11) PATCH /api/v1/book/enable/event (작품 이벤트 ON/OFF)
+    - request/response
+      {
+         "bookId":1,
+         "isEventActive": true
+      }   
                         
  2. api 실행방법
     1) 회원 가입
