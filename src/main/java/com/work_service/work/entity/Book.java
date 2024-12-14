@@ -39,4 +39,8 @@ public class Book {
     public void updateEventActive(Boolean isEventActive) {
         this.isEventActive = isEventActive;
     }
+
+    public void updateIsFree(Boolean isFree) {
+        this.isFree = isFree;
+    }
 }

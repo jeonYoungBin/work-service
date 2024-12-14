@@ -136,4 +136,11 @@ public class WorkService {
         book.updateEventActive(eventActive);
         return bookRepository.save(book).getIsEventActive();
     }
+
+    @Transactional
+    public Boolean updateBookIsFree(Boolean isFree, Long bookId) throws CustomException {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        book.updateIsFree(isFree);
+        return bookRepository.save(book).getIsFree();
+    }
 }

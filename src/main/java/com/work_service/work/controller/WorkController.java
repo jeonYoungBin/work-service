@@ -60,10 +60,20 @@ public class WorkController {
     /**
      * 작품 이벤트 ON/OFF
      */
-    @PatchMapping
-    public ResponseEntity<BookUpdateResponse> updateBookEvent(@RequestBody @Valid BookUpdateRequest request) throws CustomException {
-        return ResponseEntity.ok(BookUpdateResponse.builder()
+    @PatchMapping("/enable/event")
+    public ResponseEntity<BookUpdateEventResponse> updateBookEvent(@RequestBody @Valid BookUpdateEventRequest request) throws CustomException {
+        return ResponseEntity.ok(BookUpdateEventResponse.builder()
                 .bookId(request.getBookId()).isEventActive(workService.updateBookEvent(request.getIsEventActive(), request.getBookId()))
+                .build());
+    }
+
+    /**
+     * 무료 ON/OFF
+     */
+    @PatchMapping("/enable/isFree")
+    public ResponseEntity<BookUpdateEventResponse> updateBookIsFree(@RequestBody @Valid BookUpdateIsFreeRequest request) throws CustomException {
+        return ResponseEntity.ok(BookUpdateEventResponse.builder()
+                .bookId(request.getBookId()).isEventActive(workService.updateBookIsFree(request.getIsFree(), request.getBookId()))
                 .build());
     }
 
@@ -130,7 +140,7 @@ public class WorkController {
     }
 
     @Getter
-    static public class BookUpdateRequest {
+    static public class BookUpdateEventRequest {
         @NotNull(message = "bookId를 넣어 주세요")
         private Long bookId;
         @NotNull(message = "이벤트 활성 여부를 넣어 주세요")
@@ -138,10 +148,25 @@ public class WorkController {
     }
 
     @Getter
+    static public class BookUpdateIsFreeRequest {
+        @NotNull(message = "bookId를 넣어 주세요")
+        private Long bookId;
+        @NotNull(message = "무료 여부를 넣어 주세요")
+        private Boolean isFree;
+    }
+
+    @Getter
     @Builder
-    static class BookUpdateResponse {
+    static class BookUpdateEventResponse {
         private Long bookId;
         private Boolean isEventActive;
+    }
+
+    @Getter
+    @Builder
+    static class BookUpdateIsFreeResponse {
+        private Long bookId;
+        private Boolean isFree;
     }
 
     @Getter
