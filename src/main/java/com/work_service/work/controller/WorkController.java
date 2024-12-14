@@ -71,9 +71,9 @@ public class WorkController {
      * 무료 ON/OFF
      */
     @PatchMapping("/enable/isFree")
-    public ResponseEntity<BookUpdateEventResponse> updateBookIsFree(@RequestBody @Valid BookUpdateIsFreeRequest request) throws CustomException {
-        return ResponseEntity.ok(BookUpdateEventResponse.builder()
-                .bookId(request.getBookId()).isEventActive(workService.updateBookIsFree(request.getIsFree(), request.getBookId()))
+    public ResponseEntity<BookUpdateIsFreeResponse> updateBookIsFree(@RequestBody @Valid BookUpdateIsFreeRequest request) throws CustomException {
+        return ResponseEntity.ok(BookUpdateIsFreeResponse.builder()
+                .bookId(request.getBookId()).isFree(workService.updateBookIsFree(request.getIsFree(), request.getBookId()))
                 .build());
     }
 
