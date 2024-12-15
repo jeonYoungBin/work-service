@@ -78,7 +78,7 @@ public class WorkController {
     }
 
     /**
-     * 작품 조회
+     * 작품 조회 등록
      */
     @PostMapping("/{bookId}/views")
     public ResponseEntity<ViewHistorySaveResponse> saveViewHistory(@PathVariable Long bookId, Authentication authentication) throws CustomException {
@@ -93,7 +93,7 @@ public class WorkController {
     public ResponseEntity<List<ViewHistoryResponse>> findViewHistory(@PathVariable Long bookId,
                                                                      @RequestParam(defaultValue = "1") int page,
                                                                      @RequestParam(defaultValue = "10") int size) {
-        List<ViewHistoryResponse> findViewHistoryList = workService.findViewHistory(bookId, page, size)
+        List<ViewHistoryResponse> findViewHistoryList = workService.findViewHistory(bookId, page - 1, size)
                 .stream().map(viewHistory -> new ViewHistoryResponse(viewHistory)
         ).collect(Collectors.toList());
 

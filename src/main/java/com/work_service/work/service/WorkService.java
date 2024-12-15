@@ -42,13 +42,13 @@ public class WorkService {
     private static final int LIMIT_AGE = 19;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "books", key = "#bookId+':'+#page+':'+#size")
+    @Cacheable(value = "books", key = "'findAllByBookId'+':'+#bookId+':'+#page+':'+#size")
     public List<ViewHistory> findViewHistory(Long bookId, int page, int size) {
         return viewRepository.findAllByBookId(bookId, PageRequest.of(page, size));
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "books", key = "#findTop10PopularBooks")
+    @Cacheable(value = "books", key = "'findTop10PopularBooks'")
     public List<BookResponse> findTop10PopularBooks() {
         return viewRepository.findByTop10BooksByViews()
                 .stream()
@@ -58,9 +58,8 @@ public class WorkService {
 
     @Transactional
     public Long savePurchaseHistory(Long bookId, String userId) throws CustomException {
-        System.out.println(userId);
-        Member member = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
-        Book book =  bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        Member member = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_USER));
+        Book book =  bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_BOOK));
 
         if(book.getGradeType().equals(GradeType.YouthNotAllowed.name()) && member.getAge() < LIMIT_AGE)
             throw new CustomException(ServiceExceptionCode.NOT_ALLOW_BOOK);
@@ -69,7 +68,7 @@ public class WorkService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "books", key = "#findTop10PurchasedPopularBooks")
+    @Cacheable(value = "books", key = "'findTop10PurchasedPopularBooks'")
     public List<PurchasedBookResponse> findTop10PurchasedPopularBooks() {
         return purchaseRepository.findTop10BooksByPurchases()
                 .stream()
@@ -104,8 +103,8 @@ public class WorkService {
 
     @Transactional
     public Long saveViewHistory(Long bookId, String userId) throws CustomException {
-        Book findBook = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
-        Member findMember = memberRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        Book findBook = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_BOOK));
+        Member findMember = memberRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_USER));
         //이미 조회가 되있으면 exception
         if(viewRepository.findByBookIdAndMemberId(findBook.getId(), findMember.getId()).isPresent())
             throw new CustomException(ServiceExceptionCode.ALREADY_VIEW);
@@ -118,7 +117,7 @@ public class WorkService {
 
     @Transactional(readOnly = true)
     public String login(String userId, String password) throws CustomException {
-        Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_USER));
         if(!passwordEncoder.matches(password,member.getPassword())) {
             throw new CustomException(ServiceExceptionCode.NOT_PASSWORD_MATCH);
         }
@@ -132,14 +131,14 @@ public class WorkService {
 
     @Transactional
     public Boolean updateBookEvent(Boolean eventActive, Long bookId) throws CustomException {
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_BOOK));
         book.updateEventActive(eventActive);
         return bookRepository.save(book).getIsEventActive();
     }
 
     @Transactional
     public Boolean updateBookIsFree(Boolean isFree, Long bookId) throws CustomException {
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND));
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_BOOK));
         book.updateIsFree(isFree);
         return bookRepository.save(book).getIsFree();
     }
