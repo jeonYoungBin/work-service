@@ -1,7 +1,7 @@
 package com.work_service.work.service;
 
 import com.work_service.work.domain.GradeType;
-import com.work_service.work.domain.response.BookResponse;
+import com.work_service.work.domain.response.ViewBookResponse;
 import com.work_service.work.domain.response.PurchasedBookResponse;
 import com.work_service.work.entity.Book;
 import com.work_service.work.entity.Member;
@@ -17,12 +17,10 @@ import com.work_service.work.repository.ViewJpaDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,10 +47,10 @@ public class WorkService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "books", key = "'findTop10PopularBooks'")
-    public List<BookResponse> findTop10PopularBooks() {
+    public List<ViewBookResponse> findTop10PopularBooks() {
         return viewRepository.findByTop10BooksByViews()
                 .stream()
-                .map(findViewBooks -> new BookResponse(findViewBooks.getBookId(),findViewBooks.getTitle(),findViewBooks.getViewCount()))
+                .map(findViewBooks -> new ViewBookResponse(findViewBooks.getBookId(),findViewBooks.getTitle(),findViewBooks.getViewCount()))
                 .collect(Collectors.toList());
     }
 

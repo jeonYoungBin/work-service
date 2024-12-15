@@ -34,6 +34,7 @@ public class Book {
     private String gradeType;
 
     @CreatedDate
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public void updateEventActive(Boolean isEventActive) {

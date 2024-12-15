@@ -31,6 +31,7 @@ public class PurchaseHistory {
     @JoinColumn(name = "book_id")
     private Book book;
 
+    @CreatedDate
     @Column(name = "purchased_at")
     private LocalDateTime purchasedAt;
 

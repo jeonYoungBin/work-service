@@ -1,6 +1,6 @@
 package com.work_service.work.controller;
 
-import com.work_service.work.domain.response.BookResponse;
+import com.work_service.work.domain.response.ViewBookResponse;
 import com.work_service.work.domain.response.PurchasedBookResponse;
 import com.work_service.work.entity.ViewHistory;
 import com.work_service.work.exception.CustomException;
@@ -107,7 +107,7 @@ public class WorkController {
      * 인기 작품 조회 API
      */
     @GetMapping("/popular")
-    public ResponseEntity<List<BookResponse>> findTop10PopularWorks() {
+    public ResponseEntity<List<ViewBookResponse>> findTop10PopularWorks() {
         return ResponseEntity.ok(workService.findTop10PopularBooks());
     }
 

@@ -35,6 +35,7 @@ public class ViewHistory {
     @Column(name = "viewed_at")
     private LocalDateTime viewedAt;
 
+    @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
