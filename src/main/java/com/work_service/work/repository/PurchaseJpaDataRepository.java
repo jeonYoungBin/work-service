@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PurchaseJpaDataRepository extends JpaRepository<PurchaseHistory, Long> {
     @Query(value = "SELECT p.book_id AS bookId, b.title AS title, COUNT(p.book_id) AS purchaseCount " +
@@ -20,4 +21,6 @@ public interface PurchaseJpaDataRepository extends JpaRepository<PurchaseHistory
     @Modifying
     @Query("DELETE FROM PurchaseHistory v where v.book.id = :bookId")
     void deleteAllByBookId(Long bookId);
+
+    Optional<PurchaseHistory> findByBookIdAndMemberId(Long bookId, Long memberId);
 }

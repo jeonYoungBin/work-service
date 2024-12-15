@@ -13,7 +13,8 @@ public enum ServiceExceptionCode implements ErrorCode {
     NOT_ALLOW_BOOK(HttpStatus.FORBIDDEN, "not allow book"),
     ALREADY_JOIN(HttpStatus.CONFLICT, "already join userId"),
     NOT_PASSWORD_MATCH(HttpStatus.NOT_FOUND, "not match password"),
-    ALREADY_VIEW(HttpStatus.NOT_FOUND, "already view"),
+    ALREADY_VIEW(HttpStatus.NOT_FOUND, "already view book"),
+    ALREADY_PURCHASE(HttpStatus.NOT_FOUND, "already purchased book"),
     ;
 
     private final HttpStatus status;

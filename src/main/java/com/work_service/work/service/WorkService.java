@@ -59,6 +59,9 @@ public class WorkService {
         Member member = userRepository.findByUserId(userId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_USER));
         Book book =  bookRepository.findById(bookId).orElseThrow(() -> new CustomException(ServiceExceptionCode.DATA_NOT_FOUND_BOOK));
 
+        if(purchaseRepository.findByBookIdAndMemberId(book.getId(), member.getId()).isPresent())
+            throw new CustomException(ServiceExceptionCode.ALREADY_PURCHASE);
+
         if(book.getGradeType().equals(GradeType.YouthNotAllowed.name()) && member.getAge() < LIMIT_AGE)
             throw new CustomException(ServiceExceptionCode.NOT_ALLOW_BOOK);
 
