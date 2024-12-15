@@ -37,8 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         boolean validateToken = true;
         CommonResponse responseEntity = new CommonResponse(501, null, null);
-        if(request.getRequestURI().contains("/api/v1/book/sign") || request.getRequestURI().contains("/api/v1/book/*/views")
-        || request.getRequestURI().contains("/api/v1/book/popular") || request.getRequestURI().contains("/api/v1/book/*") || request.getRequestURI().contains("/api/v1/book/login")) {
+        if(request.getRequestURI().contains("/api/v1/book/sign") || request.getRequestURI().contains("/api/v1/book/login")) {
             filterChain.doFilter(request, response);
             return;
         }

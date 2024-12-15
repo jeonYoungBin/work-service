@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtTokenUtil jwtTokenUtil;
 
-    private static final String[] PERMIT_URL_ARRAY = {"/api/v1/book/login" ,"/api/v1/book/sign","/api/v1/book/*/views","/api/v1/book/popular", "/api/v1/book/*"};
-    private static final String[] UNPERMIT_URL_ARRAY ={"/api/v1/book/*/purchase", "/api/v1/book/*/views"};
+    private static final String[] PERMIT_URL_ARRAY = {"/api/v1/book/login" ,"/api/v1/book/sign"};
+    private static final String[] UNPERMIT_URL_ARRAY ={"/api/v1/book/*/purchase", "/api/v1/book/*/views","/api/v1/book/popular"};
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
